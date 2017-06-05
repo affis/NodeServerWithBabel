@@ -32,7 +32,7 @@ function transformToJSON(data)
 }
 
 fs.readFile('./dummy.txt', 'utf8', function(err, contents){
-    let dataRead = contents.replace(/(\[.*?\])|\(|\)/g,"").split(/\s/g);
+    let dataRead = contents.replace(/(\[.*?\])|\(|\)|\,|\.|\?/g,"").split(/\s/g);
     let lyrics = removeEmptyStrings(dataRead);
     console.log(transformToJSON(lyrics));
     // console.log(lyrics[30]);
