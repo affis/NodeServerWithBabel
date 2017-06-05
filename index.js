@@ -1,6 +1,8 @@
 import http from 'http';
 import fs from 'fs';
 
+const lowerExceptions = ['I', 'I\'d', 'I\'m', 'I\'ll', 'I\'ve', 'I\'mma']
+
 function removeEmptyStrings(data)
 {
   let cleanData = [];
@@ -31,10 +33,28 @@ function transformToJSON(data)
   return jsonLyrics;
 }
 
+function uppperCaseExceptions(json){
+  for (var i = 0; i < lowerExceptions.length; i++) {
+    if(json.hasOwnProperty(lowerExceptions[i].toLowerCase())){
+      let newKey = lowerExceptions[i]
+      let oldKey = newKey.toLowerCase()
+      if (oldKey !== newKey) {
+        Object.defineProperty(json, newKey,
+        Object.getOwnPropertyDescriptor(json, oldKey));
+        delete json[oldKey];
+      }
+    }
+  }
+  return json
+}
+
+
+
 fs.readFile('./dummy.txt', 'utf8', function(err, contents){
     let dataRead = contents.replace(/(\[.*?\])|\(|\)|\,|\.|\?/g,"").split(/\s/g);
     let lyrics = removeEmptyStrings(dataRead);
-    console.log(transformToJSON(lyrics));
+    console.log(uppperCaseExceptions(transformToJSON(lyrics)));
+
     // console.log(lyrics[30]);
 })
 
